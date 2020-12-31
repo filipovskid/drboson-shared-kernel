@@ -2,9 +2,11 @@ package com.filipovski.drboson.sharedkernel.domain.base;
 
 import org.springframework.lang.NonNull;
 
+import javax.persistence.MappedSuperclass;
 import java.util.Objects;
 import java.util.UUID;
 
+@MappedSuperclass
 public class DomainObjectId implements ValueObject {
     private String id;
 
@@ -21,6 +23,10 @@ public class DomainObjectId implements ValueObject {
         } catch (Exception e) {
             throw new RuntimeException("Could not create a new instance of " + idClass, e);
         }
+    }
+
+    public String getId() {
+        return id;
     }
 
     @Override
