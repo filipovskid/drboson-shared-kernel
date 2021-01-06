@@ -2,6 +2,7 @@ package com.filipovski.drboson.sharedkernel.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 
 import javax.naming.AuthenticationException;
@@ -21,6 +22,17 @@ public class JwtTokenHandler {
 
         if(header == null || !header.startsWith(jwtConfig.getPrefix()))
             throw new AuthenticationException();
+
+        String token = header.replace(jwtConfig.getPrefix(), "").trim();
+
+        return token;
+    }
+
+    public String resolveToken(ServerHttpRequest request) {
+        String header = request.getHeaders().getFirst(jwtConfig.getHeader());
+
+        if(header == null || !header.startsWith(jwtConfig.getPrefix()))
+            return null;
 
         String token = header.replace(jwtConfig.getPrefix(), "").trim();
 
