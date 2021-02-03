@@ -1,11 +1,14 @@
 package com.filipovski.drboson.sharedkernel.security;
 
+import com.google.common.base.Strings;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.WebUtils;
 
 import javax.naming.AuthenticationException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 @Component
@@ -18,14 +21,19 @@ public class JwtTokenHandler {
     }
 
     public String resolveToken(HttpServletRequest request) throws AuthenticationException {
-        String header = request.getHeader(jwtConfig.getHeader());
+//        String header = request.getHeader(jwtConfig.getHeader());
+//
+//        if(header == null || !header.startsWith(jwtConfig.getPrefix()))
+//            throw new AuthenticationException();
+//
+//        String token = header.replace(jwtConfig.getPrefix(), "").trim();
 
-        if(header == null || !header.startsWith(jwtConfig.getPrefix()))
+        Cookie tokenCookie = WebUtils.getCookie(request, jwtConfig.getCookieName());
+
+        if (tokenCookie == null || Strings.isNullOrEmpty(tokenCookie.getValue()))
             throw new AuthenticationException();
 
-        String token = header.replace(jwtConfig.getPrefix(), "").trim();
-
-        return token;
+        return tokenCookie.getValue();
     }
 
     public String resolveToken(ServerHttpRequest request) {
