@@ -3,6 +3,7 @@ package com.filipovski.drboson.sharedkernel.security;
 import com.google.common.base.Strings;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.springframework.http.HttpCookie;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
@@ -37,14 +38,19 @@ public class JwtTokenHandler {
     }
 
     public String resolveToken(ServerHttpRequest request) {
-        String header = request.getHeaders().getFirst(jwtConfig.getHeader());
+//        String header = request.getHeaders().getFirst(jwtConfig.getHeader());
+//
+//        if(header == null || !header.startsWith(jwtConfig.getPrefix()))
+//            return null;
+//
+//        String token = header.replace(jwtConfig.getPrefix(), "").trim();
 
-        if(header == null || !header.startsWith(jwtConfig.getPrefix()))
+        HttpCookie tokenCookie = request.getCookies().getFirst(jwtConfig.getCookieName());
+
+        if (tokenCookie == null || Strings.isNullOrEmpty(tokenCookie.getValue()))
             return null;
 
-        String token = header.replace(jwtConfig.getPrefix(), "").trim();
-
-        return token;
+        return tokenCookie.getValue();
     }
 
     public Claims validateToken(String token) {
