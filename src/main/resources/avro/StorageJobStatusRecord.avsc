@@ -27,15 +27,17 @@
           { "name": "storage_location", "type": "string", "default": "" },
           { "name": "sample_name", "type": "string", "default": "" },
           {
-            "name": "schema",
+            "name": "column_data",
             "type": {
               "type": "array",
               "items": {
-                "name": "SchemaColumn",
+                "name": "ColumnData",
                 "type": "record",
                 "fields": [
                   { "name": "name", "type": "string" },
-                  { "name": "type", "type": "string" }
+                  { "name": "type", "type": "string" },
+                  { "name": "noMissingValues", "type": "int" },
+                  { "name": "noOK", "type": "int" }
                 ]
               },
               "default": []
